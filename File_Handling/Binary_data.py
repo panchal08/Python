@@ -1,0 +1,5 @@
+photo = open('pexels-sebastiaan-stam-1480690.jpg', 'rb')
+new_photo = open('new-photo.jpg', 'wb')
+data = photo.read()
+new_photo.write(data)
+print(data)

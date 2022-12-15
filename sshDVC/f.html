@@ -1,0 +1,66 @@
+iozone: 1MB - 2GB - Read Performance
+iozone: 1MB - 4GB - Read Performance
+iozone: 2MB - 2GB - Read Performance
+iozone: 2MB - 4GB - Read Performance
+iozone: 4Kb - 2GB - Read Performance
+iozone: 4Kb - 4GB - Read Performance
+iozone: 1MB - 2GB - Write Performance
+iozone: 1MB - 4GB - Write Performance
+iozone: 2MB - 2GB - Write Performance
+iozone: 2MB - 4GB - Write Performance
+iozone: 4Kb - 2GB - Write Performance
+iozone: 4Kb - 4GB - Write Performance
+iozone: 64Kb - 2GB - Read Performance
+iozone: 64Kb - 4GB - Read Performance
+iozone: 1MB - 512MB - Read Performance
+iozone: 2MB - 512MB - Read Performance
+iozone: 4Kb - 512MB - Read Performance
+iozone: 64Kb - 2GB - Write Performance
+iozone: 64Kb - 4GB - Write Performance
+iozone: 1MB - 512MB - Write Performance
+iozone: 2MB - 512MB - Write Performance
+iozone: 4Kb - 512MB - Write Performance
+iozone: 64Kb - 512MB - Read Performance
+iozone: 64Kb - 512MB - Write Performance
+
+
+#!/bin/bash
+
+echo "Removing any previous phoronix deb file..."
+
+rm -rf phoronix-test-suite*
+
+echo "Downloading the latest phoronix test suit..."
+wget http://phoronix-test-suite.com/releases/repo/pts.debian/files/phoronix-test-suite_10.8.4_all.deb
+
+sleep 1.5
+
+echo "Installing gdebi-core package..."
+
+yes | apt install gdebi-core
+
+phor=$(ls phoronix*)
+
+echo "Installing phoronix..."
+yes | gdebi $phor
+sleep 1
+
+echo "Running phoronix for first time..."
+phoronix-test-suite
+
+sleep 1
+echo "Setting account..."
+phoronix-test-suite openbenchmarking-setup
+
+sleep 1
+if [ $1 == "gpu" ]
+then
+phoronix-test-suite benchmark pts/gputest
+
+elif [ $1 == "iozone" ]
+then
+phoronix-test-suite benchmark pts/iozone
+
+else
+echo "please pass gpu or iozone as parameter"
+fi
